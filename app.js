@@ -2,25 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./middlewares/rateLimiter');
 const errorHandler = require('./middlewares/errorHandler');
 const mainRouter = require('./routes/index');
 
 require('dotenv').config();
 
-const limiter = rateLimit({
-  windowsMs: 900000,
-  max: 100
-});
+const { MONGO_URL_DEV } = require('./utils/costants');
 
+const { NODE_ENV, MONGO_URL } = process.env;
 const { PORT = 3000 } = process.env;
 
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/moviesdb');
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : MONGO_URL_DEV);
 
+app.use(requestLogger);
 app.use(limiter);
 app.use(cors(
   {
@@ -33,7 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 
-app.use(requestLogger);
 app.use(mainRouter);
 app.use(errorLogger);
 

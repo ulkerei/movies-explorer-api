@@ -3,8 +3,7 @@
   
 Cайт, размещен на Яндекс.Облаке.
 
-IP 158.160.35.113
-Frontend https://movielib.nomoredomains.club
+IP 51.250.85.61
 Backend https://api.movielib.nomoredomains.club
 
 Репозиторий бэкенда проекта на GitHub: https://github.com/ulkerei/movies-explorer-api.git
